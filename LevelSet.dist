@@ -1,5 +1,10 @@
 # Hello World
 
 darcs /extensions/LevelSet               http://openengine.dk/code/extensions/LevelSet
-darcs /extensions/CUDA                   http://openengine.dk/code/extensions/CUDA
+darcs /extensions/TexUtils               http://openengine.dk/code/extensions/TexUtils
+
+
+darcs-dev /extensions/LevelSet           fh.daimi.au.dk:/users/cgd/code/extensions/LevelSet
+darcs-dev /extensions/TexUtils           fh.daimi.au.dk:/users/cgd/code/extensions/TexUtils
+
 
