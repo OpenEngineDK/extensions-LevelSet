@@ -6,3 +6,6 @@ ADD_LIBRARY(Extensions_LevelSet
   LevelSet/CPUStrategy.cpp
   LevelSet/CPUStrategy.h
 )
+TARGET_LINK_LIBRARIES(Extensions_LevelSet
+  Extensions_TexUtils
+)
