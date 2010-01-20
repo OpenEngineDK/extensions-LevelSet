@@ -59,7 +59,13 @@ public:
     Tex<float> GetPhi();
     void SetPhi(Tex<float>);
     
-    unsigned int GetWidth() {return width;}
+    
+    Tex<Vector<2,float> > GetGradient();
+    void SetGradient(Tex<Vector<2,float> >);
+    
+
+
+     unsigned int GetWidth() {return width;}
     unsigned int GetHeight() {return height;}
 
     float operator()(unsigned int x, unsigned int y) {return phi(x,y);}

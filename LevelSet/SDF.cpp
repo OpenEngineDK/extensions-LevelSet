@@ -1,9 +1,12 @@
 #include "SDF.h"
 #include <Logging/Logger.h>
 #include <LevelSet/CPUStrategy.h>
+#include <Utils/Timer.h>
 
 namespace OpenEngine {
 namespace LevelSet {
+
+using namespace OpenEngine::Utils;
 
 void Compare( Tex<Vector<2,float> > &g, Vector<2,float> &p, unsigned int x, unsigned int y, int offsetx, int offsety ) {
 	Vector<2,float> other = g(x+offsetx,y+offsety);
@@ -182,83 +185,11 @@ void SDF::BuildSDF() {
 
 
 void SDF::BuildGradient() {   
-    const unsigned int Y = height;
-    const unsigned int X = width;
-
-    float dx = 1;
-    float dy = 1;
-    float cdX, cdY;
-    for (unsigned int x=0; x<X; x++)
-        for (unsigned int y=0; y<Y; y++) {
-      
-            //lower left corner
-            if (x == 0 && y == 0) {
-                cdX = -(phi(x, y) - phi(x+1, y)) / dx;
-                cdY = -(phi(x, y) - phi(x, y+1)) / dy;
-
-            } 
-            //lower right corner
-            else if (x == X - 1 && y == 0) {
-                cdX = (phi(x, y) - phi(x-1, y)) / dx;
-                cdY = -(phi(x, y) - phi(x, y+1)) / dy;
-            }
-            //upper left corner
-            else if (x == 0 && y == Y - 1) {
-                cdX = -(phi(x, y) - phi(x+1, y)) / dx;
-                cdY = (phi(x, y) - phi(x, y-1)) / dy;
-
-            }      
-            //upper right corner
-            else if (x == X - 1 && y == Y - 1) {
-                cdX = (phi(x, y) - phi(x-1, y)) / dx;
-                cdY = (phi(x, y) - phi(x, y-1)) / dy;
-
-            }
-
-            // upper border
-            else if (y == 0 && (x > 0 && x < X - 1)) {
-                cdX = -(phi(x-1, y) - phi(x+1, y)) / 2 * dx;
-                cdY = -(phi(x, y)   - phi(x, y+1)) / dy;
-
-            }       
-            // lower border
-            else if (y == Y - 1 && (x > 0 && x < X - 1)) {
-                cdX = -(phi(x-1, y) - phi(x+1, y)) / 2 * dx;
-                cdY = (phi(x, y)   - phi(x, y-1)) / dy;
-
-            }
-            // left border
-            else if (x == 0 && (y > 0 && y < Y - 1)) {
-                cdX = -(phi(x, y)   - phi(x+1, y)) / dx;
-                cdY = -(phi(x, y-1) - phi(x, y+1)) / 2 * dy;
-
-            }
-            // right border
-            else if (x == X - 1 && (y > 0 && y < Y - 1)) {
-                cdX = (phi(x, y)   - phi(x-1, y)) / dx;
-                cdY = -(phi(x, y-1) - phi(x, y+1)) / 2 * dy;
-
-            }
-            // Normal case
-            else {
-	
-                // central differences
-                cdX = -(phi(x-1, y) - phi(x+1, y)) / 2 * dx;
-                cdY = -(phi(x, y-1) - phi(x, y+1)) / 2 * dy;
-            }
-
-            
-            Vector<2, float> g(cdX, cdY);
-            // if (g.IsZero()) 
-            //     g = Vector<2,float>(0,1);
-                
-            // g.Normalize();
-            gradient(x,y) = g;
-
-        }
-    gradient.ToTexture(gradientTexture);
-    updateQueue.Put(gradientTexture);
-
+    // Timer timer;
+    // timer.Start();
+    strategy->BuildGradient(this);
+    // Time t = timer.GetElapsedTimeAndReset();
+    // logger.info << "BuildGradient " << t << " " << strategy->ToString() << logger.end;
 }
 
 
@@ -281,7 +212,11 @@ Vector<2, float> SDF::Gradient(unsigned int i, unsigned int j) {
 
 
 void SDF::Reinitialize(unsigned int iterations) {
+    Timer timer;
+    timer.Start();
     strategy->Reinitialize(this,iterations);
+    Time t = timer.GetElapsedTimeAndReset();
+    logger.info << "Reinit " << t << " " << strategy->ToString() << logger.end;
 
     BuildGradient();
 
@@ -352,6 +287,22 @@ void SDF::SetPhi(Tex<float> phiT) {
     SDFToTexture(phi,outputTexture);
     updateQueue.Put(outputTexture);
 }
+
+Tex<Vector<2,float> > SDF::GetGradient() {
+    //return phi;
+
+    Tex<Vector<2,float> > cp(width,height);
+    cp = gradient;
+    return cp;
+}
+
+    void SDF::SetGradient(Tex<Vector<2,float> > gT) {
+    gradient = gT;
+
+    gradient.ToTexture(gradientTexture);
+    updateQueue.Put(gradientTexture);
+}
+
 
 
 void SDF::Refresh() {

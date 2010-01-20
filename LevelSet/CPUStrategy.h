@@ -18,6 +18,7 @@ class CPUStrategy : public Strategy {
 public:
     CPUStrategy();
     void Reinitialize(SDF* sdf,unsigned int iterations); 
+    void BuildGradient(SDF* sdf);
 };
 
 } // NS LevelSet
