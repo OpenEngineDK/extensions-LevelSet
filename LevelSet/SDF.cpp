@@ -124,7 +124,7 @@ void SDF::BuildSDF() {
     const unsigned int Y = in->GetHeight();
     const unsigned int X = in->GetWidth();
     const unsigned char* bw = in->GetData();
-    const unsigned int depth = in->GetDepth()/8;
+    const unsigned int depth = in->GetChannels();
 
 
     //Tex<float> pphi(X,Y);
