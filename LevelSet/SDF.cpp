@@ -123,7 +123,7 @@ void SDF::BuildSDF() {
 
     const unsigned int Y = in->GetHeight();
     const unsigned int X = in->GetWidth();
-    const unsigned char* bw = in->GetData();
+    const unsigned char* bw = (unsigned char*)in->GetVoidDataPtr();
     const unsigned int depth = in->GetChannels();
 
 

@@ -1,7 +1,7 @@
 #ifndef _LS_SDF_H_
 #define _LS_SDF_H_
 
-#include <Resources/ITextureResource.h>
+#include <Resources/ITexture2D.h>
 #include <Math/Vector.h>
 #include <Resources/Tex.h>
 #include <Core/LockedQueue.h>
