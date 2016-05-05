@@ -1,10 +1,10 @@
 # Hello World
 
-darcs /extensions/LevelSet               http://openengine.dk/code/extensions/LevelSet
-darcs /extensions/TexUtils               http://openengine.dk/code/extensions/TexUtils
+git /extensions/LevelSet               https://github.com/OpenEngineDK/extensions-LevelSet.git
+git /extensions/TexUtils               https://github.com/OpenEngineDK/extensions-TexUtils.git
 
 
-darcs-dev /extensions/LevelSet           fh.daimi.au.dk:/users/cgd/code/extensions/LevelSet
-darcs-dev /extensions/TexUtils           fh.daimi.au.dk:/users/cgd/code/extensions/TexUtils
+git-dev /extensions/LevelSet           git@github.com:OpenEngineDK/extensions-LevelSet.git
+git-dev /extensions/TexUtils           git@github.com:OpenEngineDK/extensions-TexUtils.git
 
 
